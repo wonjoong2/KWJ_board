@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.board.BoardMapper">
+
+
+
+	<select id="BoardList" resultType="board">
+
+		select * from board;
+
+	</select>
+
+
+	<insert id="InsertBoard" parameterType="board">
+
+		INSERT INTO board(id,
+		title, content)
+		VALUES(#{id}, #{title},
+		#{content})
+
+	</insert>
+
+	<select id="BoardDetail" resultType="board">
+
+		select * from board where
+		title=#{title}
+
+	</select>
+
+
+	<select id="RelatedBoard" resultType="board">
+
+		SELECT b1.id, b1.title,
+		b1.content, b1.date, b2.id, b2.title, b2.content, b2.date
+		FROM board b1, board b2
+		WHERE b1.content != b2.content
+		AND b1.content LIKE CONCAT('%', b2.content, '%')
+		AND LENGTH(b2.content) >= 0.4 * LENGTH(b1.content)
+		ORDER BY LENGTH(b2.content) DESC;
+
+
+	</select>
+
+	<!-- AND b1.content = #{b1.content} -->
+
+</mapper>
